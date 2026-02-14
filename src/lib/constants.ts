@@ -1,0 +1,108 @@
+export const BUSINESS = {
+  name: "Sofa Cleaning Dublin",
+  phone: "+353 1 233 7777",
+  phoneDisplay: "(01) 233 7777",
+  email: "info@sofacleaningdublin.ie",
+  address: {
+    street: "77 Sir John Rogerson's Quay",
+    area: "Grand Canal Dock",
+    city: "Dublin",
+    postcode: "D02 F540",
+    country: "Ireland",
+  },
+  fullAddress: "77 Sir John Rogerson's Quay, Grand Canal Dock, Dublin D02 F540",
+  hours: {
+    weekdays: "8:00 AM - 6:00 PM",
+    saturday: "9:00 AM - 5:00 PM",
+    sunday: "Closed",
+  },
+  social: {
+    facebook: "https://facebook.com/sofacleaningdublin",
+    instagram: "https://instagram.com/sofacleaningdublin",
+    google: "https://g.page/sofacleaningdublin",
+  },
+};
+
+export const SERVICES = [
+  {
+    id: "sofa-cleaning",
+    name: "Sofa Cleaning",
+    slug: "sofa-cleaning",
+    description: "Deep cleaning for all sofa types, removing stains, odours, and allergens.",
+    price: "From €79",
+    icon: "chair",
+    features: ["Stain removal", "Odour elimination", "Fabric protection", "Same-day service"],
+  },
+  {
+    id: "armchair-cleaning",
+    name: "Armchair Cleaning",
+    slug: "armchair-cleaning",
+    description: "Professional cleaning for armchairs and accent chairs of all fabrics.",
+    price: "From €39",
+    icon: "chair_alt",
+    features: ["All fabric types", "Gentle cleaning", "Quick drying", "Colour restoration"],
+  },
+  {
+    id: "mattress-cleaning",
+    name: "Mattress Cleaning",
+    slug: "mattress-cleaning",
+    description: "Hygienic mattress cleaning removing dust mites, stains, and allergens.",
+    price: "From €59",
+    icon: "bed",
+    features: ["Dust mite removal", "Allergen elimination", "Stain treatment", "Freshening"],
+  },
+  {
+    id: "leather-cleaning",
+    name: "Leather Care",
+    slug: "leather-cleaning",
+    description: "Specialist leather cleaning and conditioning for sofas and chairs.",
+    price: "From €99",
+    icon: "spa",
+    features: ["Deep cleaning", "Conditioning", "Crack prevention", "Colour restoration"],
+  },
+  {
+    id: "curtain-cleaning",
+    name: "Curtain Cleaning",
+    slug: "curtain-cleaning",
+    description: "In-home curtain and drape cleaning without removal.",
+    price: "From €15/panel",
+    icon: "blinds",
+    features: ["In-home service", "No removal needed", "Dust removal", "Fabric refresh"],
+  },
+  {
+    id: "rug-cleaning",
+    name: "Rug Cleaning",
+    slug: "rug-cleaning",
+    description: "Deep cleaning for all rug types including oriental and delicate rugs.",
+    price: "From €8/sqm",
+    icon: "texture",
+    features: ["All rug types", "Stain removal", "Colour restoration", "Fringe cleaning"],
+  },
+];
+
+export const AREAS = [
+  { name: "Dublin 1", slug: "dublin-1", neighborhoods: ["O'Connell Street", "Parnell Square", "IFSC"] },
+  { name: "Dublin 2", slug: "dublin-2", neighborhoods: ["City Centre", "Temple Bar", "St Stephen's Green"] },
+  { name: "Dublin 4", slug: "dublin-4", neighborhoods: ["Ballsbridge", "Donnybrook", "Sandymount"] },
+  { name: "Dublin 6", slug: "dublin-6", neighborhoods: ["Ranelagh", "Rathmines", "Rathgar"] },
+  { name: "Dublin 6W", slug: "dublin-6w", neighborhoods: ["Terenure", "Harold's Cross", "Templeogue"] },
+  { name: "Dublin 8", slug: "dublin-8", neighborhoods: ["Portobello", "The Liberties", "Kilmainham"] },
+  { name: "Dublin 9", slug: "dublin-9", neighborhoods: ["Drumcondra", "Glasnevin", "Beaumont"] },
+  { name: "Dublin 12", slug: "dublin-12", neighborhoods: ["Crumlin", "Walkinstown", "Drimnagh"] },
+  { name: "Dublin 14", slug: "dublin-14", neighborhoods: ["Dundrum", "Churchtown", "Clonskeagh"] },
+  { name: "Dublin 15", slug: "dublin-15", neighborhoods: ["Blanchardstown", "Castleknock", "Clonsilla"] },
+  { name: "Dublin 16", slug: "dublin-16", neighborhoods: ["Ballinteer", "Knocklyon", "Rathfarnham"] },
+  { name: "Dublin 18", slug: "dublin-18", neighborhoods: ["Sandyford", "Leopardstown", "Foxrock"] },
+  { name: "Dún Laoghaire", slug: "dun-laoghaire", neighborhoods: ["Dún Laoghaire", "Glasthule", "Sandycove"] },
+  { name: "Blackrock", slug: "blackrock", neighborhoods: ["Blackrock", "Booterstown", "Mount Merrion"] },
+  { name: "Malahide", slug: "malahide", neighborhoods: ["Malahide", "Portmarnock", "Kinsealy"] },
+  { name: "Swords", slug: "swords", neighborhoods: ["Swords", "Rivervalley", "Applewood"] },
+  { name: "Howth", slug: "howth", neighborhoods: ["Howth", "Sutton", "Baldoyle"] },
+];
+
+export const NAV_LINKS = [
+  { name: "Services", href: "/services" },
+  { name: "Areas", href: "/areas" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
+];
