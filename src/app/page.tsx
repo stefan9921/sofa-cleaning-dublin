@@ -1,79 +1,151 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { ContactForm, ServiceCard, AreaCard } from "@/components";
-import { BUSINESS, SERVICES, AREAS } from "@/lib/constants";
+import { BUSINESS } from "@/lib/constants";
 
 export default function Home() {
+  const [formData, setFormData] = useState({ name: "", phone: "", service: "Sofa Cleaning" });
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("submitting");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, email: "", message: "" }),
+      });
+      if (res.ok) setStatus("success");
+      else setStatus("error");
+    } catch {
+      setStatus("error");
+    }
+  };
+
   return (
     <>
-      {/* Hero Section with Contact Form Above the Fold */}
-      <section className="relative bg-gradient-to-b from-surface to-white">
-        <div className="container-padding py-12 lg:py-20">
-          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-            {/* Left Column - Content */}
-            <div className="lg:col-span-7 lg:pr-8">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider mb-6">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                Dublin&apos;s Top-Rated Upholstery Cleaners
+      {/* Header */}
+      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined text-primary text-3xl font-bold">chair</span>
+              <span className="text-xl font-bold tracking-tight text-primary">SofaClean<span className="text-slate-900">Dublin</span></span>
+            </div>
+            <nav className="hidden md:flex space-x-8">
+              <a className="text-sm font-semibold text-slate-600 hover:text-primary transition-colors" href="#services">Services</a>
+              <a className="text-sm font-semibold text-slate-600 hover:text-primary transition-colors" href="#process">Process</a>
+              <a className="text-sm font-semibold text-slate-600 hover:text-primary transition-colors" href="#areas">Areas</a>
+              <a className="text-sm font-semibold text-slate-600 hover:text-primary transition-colors" href="#contact">Contact</a>
+            </nav>
+            <div className="flex items-center gap-6">
+              <a className="hidden lg:flex items-center gap-2 text-sm font-bold text-slate-900" href={`tel:${BUSINESS.phone}`}>
+                <span className="material-symbols-outlined text-primary">phone_in_talk</span>
+                {BUSINESS.phoneDisplay}
+              </a>
+              <a className="bg-primary hover:bg-teal-dark text-white px-6 py-2.5 rounded-lg text-sm font-bold transition-all shadow-md" href="#quote">
+                Get Free Quote
+              </a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Hero Section */}
+      <section className="relative bg-white pt-12 pb-20 lg:pt-20 lg:pb-32 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="grid lg:grid-cols-12 gap-12 items-center">
+            <div className="lg:col-span-7">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 text-primary text-xs font-bold uppercase tracking-wider mb-6">
+                <span className="material-symbols-outlined text-sm">verified</span> Dublin&apos;s Top-Rated Upholstery Cleaners
               </div>
-
-              <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 leading-[1.1] mb-6">
-                Professional{" "}
-                <span className="text-primary">Sofa Cleaning</span>
-                {" "}in Dublin
+              <h1 className="text-4xl lg:text-6xl font-extrabold text-slate-900 leading-[1.1] mb-6">
+                Professional <span className="text-primary">Sofa Cleaning</span> in Dublin
               </h1>
-
               <p className="text-xl text-slate-600 mb-8 leading-relaxed max-w-2xl">
                 Expert same-day upholstery cleaning across Dublin. We restore your furniture to its former glory using eco-friendly, family-safe technology.
               </p>
-
-              {/* Trust Badges */}
-              <div className="flex flex-wrap gap-6 mb-10">
+              <div className="flex flex-wrap gap-8 mb-10">
                 <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-sm font-semibold text-slate-600">Same-Day Service</span>
+                  <span className="material-symbols-outlined text-primary">task_alt</span>
+                  <span className="text-sm font-bold text-slate-700">Same-Day Service</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                  </svg>
-                  <span className="text-sm font-semibold text-slate-600">Fully Insured</span>
+                  <span className="material-symbols-outlined text-primary">security</span>
+                  <span className="text-sm font-bold text-slate-700">Fully Insured</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064" />
-                  </svg>
-                  <span className="text-sm font-semibold text-slate-600">Eco-Friendly</span>
+                  <span className="material-symbols-outlined text-primary">eco</span>
+                  <span className="text-sm font-bold text-slate-700">Non-Toxic Products</span>
                 </div>
               </div>
-
-              {/* Hero Image - Hidden on mobile, shown on lg */}
-              <div className="hidden lg:block mt-8">
-                <Image
-                  src="/images/hero-sofa.jpg"
-                  alt="Professional sofa cleaning in Dublin"
-                  width={600}
-                  height={400}
-                  className="rounded-2xl shadow-2xl object-cover"
-                  priority
-                />
+              <div className="hidden lg:block">
+                <img alt="Professional sofa cleaning process" className="rounded-2xl shadow-2xl w-full h-[400px] object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBzKLM3kzEAVXngGlDnqV4vzeIO30vAPu4JDMliVNrNuRR98UB1TrU8HPplI-YvBJcHhpTlBz1cb4023dCVxXEhpddpz2DdqiW_uuXA_yWkin3WxmnUA7KnVi8N5Of1qxXIcamXID5sD4Wy5QU87a3xWelNlcmj3I-FnsQvOlu4cNSEcZT_9YEnncq9qQ2_Z-vPC5xFvIvQFvsocinHop5bAAc_isI5x3qFcUbAzpceBZKjjlUXXRum2wlqYOqp0vuOPBrDlrAn2ybL"/>
               </div>
             </div>
-
-            {/* Right Column - Contact Form */}
-            <div className="lg:col-span-5">
-              <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 p-6 lg:p-8 relative">
-                <div className="absolute -top-3 -right-3 bg-primary text-white px-4 py-1 rounded-lg text-sm font-bold shadow-lg">
+            <div className="lg:col-span-5" id="quote">
+              <div className="bg-white rounded-2xl shadow-2xl border border-slate-100 p-8 lg:p-10 relative">
+                <div className="absolute -top-4 -right-4 bg-primary text-white px-4 py-1 rounded-lg text-sm font-bold shadow-lg">
                   Free Estimates
                 </div>
-                <h2 className="text-2xl font-bold text-slate-900 mb-6">
-                  Get a Free Quote
-                </h2>
-                <ContactForm compact />
+                <h3 className="text-2xl font-bold text-slate-900 mb-6">Get a Free Quote</h3>
+                {status === "success" ? (
+                  <div className="text-center py-8">
+                    <span className="material-symbols-outlined text-green-500 text-5xl mb-4">check_circle</span>
+                    <p className="text-lg font-bold text-slate-900">Thank you!</p>
+                    <p className="text-slate-600">We&apos;ll be in touch within 15 minutes.</p>
+                  </div>
+                ) : (
+                  <form className="space-y-4" onSubmit={handleSubmit}>
+                    <div>
+                      <label className="block text-sm font-bold text-slate-700 mb-1">Full Name</label>
+                      <input 
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-primary focus:border-primary transition-all" 
+                        placeholder="John Doe" 
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) => setFormData({...formData, name: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-slate-700 mb-1">Phone Number</label>
+                      <input 
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-primary focus:border-primary transition-all" 
+                        placeholder="(08x) 123 4567" 
+                        type="tel"
+                        value={formData.phone}
+                        onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                        required
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-bold text-slate-700 mb-1">Service Type</label>
+                      <select 
+                        className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-primary focus:border-primary transition-all"
+                        value={formData.service}
+                        onChange={(e) => setFormData({...formData, service: e.target.value})}
+                      >
+                        <option>Sofa Cleaning</option>
+                        <option>Armchair Cleaning</option>
+                        <option>Mattress Cleaning</option>
+                        <option>Carpet Cleaning</option>
+                      </select>
+                    </div>
+                    <button 
+                      className="w-full bg-primary hover:bg-teal-dark text-white py-4 rounded-xl text-lg font-bold transition-all shadow-lg shadow-cyan-200 mt-4 disabled:opacity-50" 
+                      type="submit"
+                      disabled={status === "submitting"}
+                    >
+                      {status === "submitting" ? "Sending..." : "Get My Quote Now"}
+                    </button>
+                    <p className="text-center text-xs text-slate-400 mt-4">
+                      We usually respond within 15 minutes during business hours.
+                    </p>
+                  </form>
+                )}
               </div>
             </div>
           </div>
@@ -81,181 +153,223 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section className="section-padding bg-white" id="services">
-        <div className="container-padding">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Our Cleaning Services
-            </h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">
-              Professional cleaning solutions for all your upholstery needs. From sofas to mattresses, we&apos;ve got you covered.
-            </p>
+      <section className="py-24 bg-slate-50" id="services">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900 mb-4">Our Professional Services</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto text-lg">Specialized care for all your home fabrics using industry-leading deep extraction methods.</p>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {SERVICES.map((service) => (
-              <ServiceCard key={service.id} {...service} />
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              { icon: "chair", title: "Sofa Cleaning", desc: "Revitalize your fabric or leather sofas with our deep-steam extraction that removes embedded dirt and allergens." },
+              { icon: "event_seat", title: "Armchair Cleaning", desc: "Dedicated stain removal and fabric conditioning for armchairs, recliners, and specialized lounge seating." },
+              { icon: "bed", title: "Mattress Cleaning", desc: "Ensure a hygienic sleep environment with our medical-grade cleaning that eliminates dust mites and bacteria." },
+              { icon: "layers", title: "Carpet Cleaning", desc: "From area rugs to wall-to-wall carpets, we provide high-pressure steam cleaning for a total home refresh." },
+            ].map((service, index) => (
+              <div key={index} className="bg-white p-8 rounded-xl shadow-sm border border-slate-200 hover:border-primary transition-all group">
+                <div className="w-14 h-14 bg-cyan-50 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary transition-colors">
+                  <span className="material-symbols-outlined text-primary group-hover:text-white text-3xl">{service.icon}</span>
+                </div>
+                <h3 className="text-xl font-bold mb-3 text-slate-900">{service.title}</h3>
+                <p className="text-slate-600 text-sm leading-relaxed">{service.desc}</p>
+              </div>
             ))}
-          </div>
-
-          <div className="text-center mt-10">
-            <Link href="/services" className="btn-primary">
-              View All Services
-            </Link>
           </div>
         </div>
       </section>
 
       {/* Process Section */}
-      <section className="section-padding bg-surface">
-        <div className="container-padding">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Our 4-Step Process
-            </h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">
-              We follow a proven process to ensure the best results for your furniture.
-            </p>
+      <section className="py-24 bg-white" id="process">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900 mb-4">Our 5-Step Cleaning Process</h2>
+            <p className="text-slate-600 max-w-2xl mx-auto text-lg">We use a thorough, scientifically-proven method to ensure deep cleaning and hygiene.</p>
           </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {[
-              { step: 1, title: "Inspection", desc: "We assess your furniture to determine the best cleaning approach" },
-              { step: 2, title: "Pre-Treatment", desc: "Stains and high-traffic areas get special pre-treatment" },
-              { step: 3, title: "Deep Clean", desc: "Professional deep cleaning using eco-friendly solutions" },
-              { step: 4, title: "Protection", desc: "Optional fabric protection to keep your furniture cleaner longer" },
-            ].map((item) => (
-              <div key={item.step} className="text-center">
-                <div className="w-16 h-16 rounded-full bg-primary text-white text-2xl font-bold flex items-center justify-center mx-auto mb-4">
-                  {item.step}
+              { icon: "search", title: "1. Pre-Inspection", desc: "Assessing fabric type and stains." },
+              { icon: "vacuum", title: "2. Industrial Vacuuming", desc: "Removing loose dust and allergens." },
+              { icon: "science", title: "3. Pre-Treatment", desc: "Breaking down tough stains with eco-solutions." },
+              { icon: "hot_tub", title: "4. Steam Extraction", desc: "High-pressure hot water extraction for a deep clean." },
+              { icon: "content_cut", title: "5. Grooming", desc: "Restoring the fabric's pile and appearance." },
+            ].map((step, index) => (
+              <div key={index} className="bg-slate-50 p-6 rounded-lg border border-slate-100 hover:border-primary/50 hover:shadow-lg transition-all text-center">
+                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-sm text-primary">
+                  <span className="material-symbols-outlined text-2xl">{step.icon}</span>
                 </div>
-                <h3 className="text-lg font-bold text-slate-900 mb-2">{item.title}</h3>
-                <p className="text-sm text-slate-600">{item.desc}</p>
+                <h4 className="font-bold text-slate-900 mb-2">{step.title}</h4>
+                <p className="text-xs text-slate-600">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="section-padding bg-white">
-        <div className="container-padding">
+      {/* Testimonials Section */}
+      <section className="py-24 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900 mb-4">Trusted by Dublin Families</h2>
+            <div className="flex justify-center gap-1 text-yellow-400 mb-2">
+              <span className="material-icons">star</span>
+              <span className="material-icons">star</span>
+              <span className="material-icons">star</span>
+              <span className="material-icons">star</span>
+              <span className="material-icons">star</span>
+            </div>
+            <p className="text-slate-500 font-medium">Over 500+ five-star reviews from local residents</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { name: "Sarah Jenkins", area: "Rathmines, Dublin 6", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCC-vFLULsnQlZbVVoLf9Y3BMaPVaSJK9_e2TbCJcZY_YX8VkF98PW1DJ-mVI08E3sFt6qKzt8fwJZOrAY2EMjcDh7NvqYWJkZMnDf_0B5wOIMeF3mCsCDbsPde4Nloo6YNQv4MfRd-iU9SysT5PuIredGYMofm6VHuOXFpTJPDSKxYEkWbZH971cwuFWaSHMjYRs3Lmhhb1IZVDdifVRZ_wUAuHzuMqzncTZD4nVh78HYVh2ELYc5Ajg5oe--Kubd2Q6D5SK3myz8b", text: "Outstanding service! My cream sofa looks brand new again. The technician was extremely professional and arrived exactly when he said he would." },
+              { name: "Mark O'Reilly", area: "Blackrock, Co. Dublin", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuCxhMOvrIl_6duN6LTuebYNgCZJGiWiC-iXpLxCJ3I2oKwSCyZKImQqUJcYhxSW0qvC43XMWeYq4DkK65QWp3Qwi-YrljMyYK_9mUu_nSBpHNEVBnITf7-kKiQ1aSTGO2QA-uDMPFIvQ3mDsUxJLME3BvBYVPCTmVqLShEtd58YtwVE5aVzo1fRWYG3yN1wrHFrjRsHtbpA1X7TxIfhLHEEyjur87v42-veuEGsSbSmSJwlmJPTdljvB2YCMBdJhRY9vK1k_Fm5ishY", text: "Highly recommend for mattress cleaning. Efficient, thorough, and very reasonably priced for Dublin. It has made a huge difference to my sleep quality." },
+              { name: "Emma Byrne", area: "Swords, North Dublin", img: "https://lh3.googleusercontent.com/aida-public/AB6AXuDYzbgTG-9V4Lrj7ZSmRwc_QYzV5xbubZvXmkopsUHOIiToA25ow7JUm15gwyu0TLTwvMCRJHUw0JPDXq_GqQwmJs4_lEx9nWJQ-Kn_RRMjgr7cdhrMgOpmADX4fsCcmCYY_zNEy_8Pk38Iu44D1oyQChKVinNdld4hnB_acirVuFC1WP8qKdmYwSQoDfuR1oz71IrlHKqwA2RATOEfLRGjghJWKtSBgioa7yCJRaENcmFo_jurddNdaVbXXn0t0_iqdj8-W5xl5bUP", text: "They managed to remove red wine stains that I thought were permanent. Absolute lifesavers! Quick, clean, and no chemical smell." },
+            ].map((testimonial, index) => (
+              <div key={index} className="bg-white p-8 rounded-2xl border border-slate-100">
+                <div className="flex items-center gap-4 mb-6">
+                  <img alt={testimonial.name} className="w-12 h-12 rounded-full object-cover" src={testimonial.img}/>
+                  <div>
+                    <h4 className="font-bold text-slate-900">{testimonial.name}</h4>
+                    <p className="text-xs text-primary font-bold">{testimonial.area}</p>
+                  </div>
+                </div>
+                <div className="flex text-yellow-400 text-xs mb-3">
+                  <span className="material-icons">star</span><span className="material-icons">star</span><span className="material-icons">star</span><span className="material-icons">star</span><span className="material-icons">star</span>
+                </div>
+                <p className="text-slate-600 italic leading-relaxed">&ldquo;{testimonial.text}&rdquo;</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Areas Section */}
+      <section className="py-24 bg-white" id="areas">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
-                Why Choose Sofa Cleaning Dublin?
-              </h2>
-              <div className="space-y-6">
-                {[
-                  { title: "Experienced Professionals", desc: "Our team has cleaned thousands of sofas across Dublin with consistently excellent results." },
-                  { title: "Same-Day Service", desc: "Need it cleaned today? We offer same-day service for most bookings made before noon." },
-                  { title: "Eco-Friendly Products", desc: "Safe for children, pets, and the environment. Our cleaning solutions are non-toxic and biodegradable." },
-                  { title: "Satisfaction Guaranteed", desc: "If you're not happy with our service, we'll come back and re-clean for free." },
-                ].map((item, index) => (
-                  <div key={index} className="flex gap-4">
-                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                      <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-slate-900 mb-1">{item.title}</h3>
-                      <p className="text-sm text-slate-600">{item.desc}</p>
-                    </div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-50 text-primary text-xs font-bold uppercase tracking-wider mb-6">
+                <span className="material-symbols-outlined text-sm">location_on</span> We Are Local
+              </div>
+              <h2 className="text-3xl lg:text-4xl font-extrabold text-slate-900 mb-6">Serving All of Dublin</h2>
+              <p className="text-slate-600 text-lg mb-8 leading-relaxed">
+                Our team of mobile technicians covers the entirety of County Dublin, bringing professional upholstery care directly to your doorstep. From city center apartments to suburban family homes, we are just a call away.
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-3 gap-x-6">
+                {["Rathmines", "Clontarf", "Lucan", "Blackrock", "Dundrum", "Terenure", "Swords", "Malahide", "Howth", "Tallaght", "Dalkey", "Stillorgan"].map((area) => (
+                  <div key={area} className="flex items-center gap-2 text-slate-700 font-medium text-sm">
+                    <span className="w-2 h-2 rounded-full bg-primary flex-shrink-0"></span> {area}
                   </div>
                 ))}
               </div>
-            </div>
-            <div className="relative">
-              <Image
-                src="/images/why-choose-us.jpg"
-                alt="Professional sofa cleaning team"
-                width={600}
-                height={500}
-                className="rounded-2xl shadow-xl object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Areas We Cover */}
-      <section className="section-padding bg-surface" id="areas">
-        <div className="container-padding">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              Areas We Cover
-            </h2>
-            <p className="text-slate-600 max-w-2xl mx-auto">
-              We provide professional sofa cleaning services across Dublin and surrounding areas.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {AREAS.slice(0, 8).map((area) => (
-              <AreaCard key={area.slug} {...area} />
-            ))}
-          </div>
-
-          <div className="text-center mt-10">
-            <Link href="/areas" className="btn-secondary">
-              View All Areas
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="section-padding bg-white">
-        <div className="container-padding">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
-              What Our Customers Say
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { name: "Sarah M.", area: "Ranelagh", text: "Absolutely fantastic service! My sofa looks brand new. The team was professional, on time, and the results exceeded my expectations." },
-              { name: "John D.", area: "Blackrock", text: "Had a stubborn red wine stain that I thought was permanent. These guys removed it completely! Highly recommend." },
-              { name: "Emma K.", area: "Drumcondra", text: "Great value for money. They cleaned our 3-seater and armchair in under an hour. Will definitely use again." },
-            ].map((testimonial, index) => (
-              <div key={index} className="card">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-                <p className="text-slate-600 mb-4">&ldquo;{testimonial.text}&rdquo;</p>
-                <p className="font-bold text-slate-900">{testimonial.name}</p>
-                <p className="text-sm text-slate-500">{testimonial.area}</p>
+              <div className="mt-8">
+                <p className="text-sm text-slate-500 italic">And many more surrounding areas...</p>
               </div>
-            ))}
+            </div>
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent rounded-2xl transform rotate-3 group-hover:rotate-2 transition-transform duration-500"></div>
+              <div className="relative bg-white border border-slate-100 rounded-2xl shadow-xl overflow-hidden min-h-[400px] flex items-center justify-center bg-slate-50">
+                <div className="absolute inset-0 opacity-10" style={{backgroundImage: "radial-gradient(#0891b2 1px, transparent 1px)", backgroundSize: "20px 20px"}}></div>
+                <div className="relative z-10 text-center">
+                  <span className="material-symbols-outlined text-[12rem] text-primary/20">map</span>
+                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <span className="material-symbols-outlined text-4xl text-red-500 animate-bounce">location_on</span>
+                    <div className="bg-white px-3 py-1 rounded-full shadow-lg text-xs font-bold text-slate-800 mt-2 border border-slate-200">
+                      Serving All Dublin
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="bg-primary text-white py-16">
-        <div className="container-padding text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Ready for a Cleaner Sofa?
-          </h2>
-          <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
-            Get your free quote today. Same-day service available for bookings before noon.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href={`tel:${BUSINESS.phone}`} className="bg-white text-primary px-8 py-3 rounded-lg font-bold hover:bg-slate-100 transition-colors">
-              Call {BUSINESS.phoneDisplay}
-            </a>
-            <Link href="/contact" className="border-2 border-white text-white px-8 py-3 rounded-lg font-bold hover:bg-white/10 transition-colors">
-              Get Free Quote
-            </Link>
+      <section className="py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-primary rounded-3xl p-12 lg:p-16 text-center relative overflow-hidden shadow-2xl shadow-cyan-200">
+            <div className="absolute top-0 right-0 p-8 opacity-10">
+              <span className="material-symbols-outlined text-[15rem]">cleaning_services</span>
+            </div>
+            <h2 className="text-3xl lg:text-5xl font-bold text-white mb-6 relative z-10">Ready for a Fresh, Clean Sofa?</h2>
+            <p className="text-white/90 text-xl mb-10 max-w-2xl mx-auto relative z-10">Get your instant estimate and book your same-day slot in seconds.</p>
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-8 relative z-10">
+              <a className="text-white text-3xl font-extrabold flex items-center gap-3" href={`tel:${BUSINESS.phone}`}>
+                <span className="material-symbols-outlined text-4xl bg-white/20 p-3 rounded-full">call</span>
+                {BUSINESS.phoneDisplay}
+              </a>
+              <a className="bg-white text-primary hover:bg-slate-50 px-10 py-5 rounded-2xl text-xl font-extrabold transition-all shadow-xl" href="#quote">
+                Get Free Quote
+              </a>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-slate-50 pt-20 pb-10 border-t border-slate-200" id="contact">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-4 gap-12 mb-16">
+            <div className="col-span-1">
+              <div className="flex items-center gap-2 mb-6">
+                <span className="material-symbols-outlined text-primary text-3xl font-bold">chair</span>
+                <span className="text-xl font-bold tracking-tight text-primary">SofaClean<span className="text-slate-900">Dublin</span></span>
+              </div>
+              <p className="text-slate-500 text-sm leading-relaxed mb-6">Your local Dublin upholstery specialists. Providing top-tier cleaning services to homes and businesses across the city for over 10 years.</p>
+              <div className="flex gap-4">
+                <a className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center hover:bg-primary hover:text-white transition-colors" href="#">
+                  <span className="material-icons text-xl">facebook</span>
+                </a>
+                <a className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center hover:bg-primary hover:text-white transition-colors" href="#">
+                  <span className="material-icons text-xl">camera_alt</span>
+                </a>
+                <a className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center hover:bg-primary hover:text-white transition-colors" href="#">
+                  <span className="material-icons text-xl">alternate_email</span>
+                </a>
+              </div>
+            </div>
+            <div>
+              <h4 className="font-bold text-slate-900 mb-6 uppercase tracking-wider text-xs">Services</h4>
+              <ul className="space-y-4 text-sm font-medium text-slate-500">
+                <li><Link className="hover:text-primary transition-colors" href="/services/sofa-cleaning">Sofa Cleaning</Link></li>
+                <li><Link className="hover:text-primary transition-colors" href="/services/armchair-cleaning">Armchair Cleaning</Link></li>
+                <li><Link className="hover:text-primary transition-colors" href="/services/mattress-cleaning">Mattress Cleaning</Link></li>
+                <li><Link className="hover:text-primary transition-colors" href="/services/rug-cleaning">Carpet Cleaning</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold text-slate-900 mb-6 uppercase tracking-wider text-xs">Business Hours</h4>
+              <ul className="space-y-4 text-sm font-medium text-slate-500">
+                <li className="flex justify-between"><span>Mon - Fri</span> <span>08:00 - 19:00</span></li>
+                <li className="flex justify-between"><span>Saturday</span> <span>09:00 - 17:00</span></li>
+                <li className="flex justify-between"><span>Sunday</span> <span>Closed</span></li>
+                <li className="text-primary font-bold">24/7 Emergency Calls</li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-bold text-slate-900 mb-6 uppercase tracking-wider text-xs">Contact Us</h4>
+              <ul className="space-y-4 text-sm font-medium text-slate-500">
+                <li className="flex items-start gap-3">
+                  <span className="material-symbols-outlined text-primary text-xl">location_on</span>
+                  <span>{BUSINESS.fullAddress}</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-primary text-xl">mail</span>
+                  <span>{BUSINESS.email}</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <span className="material-symbols-outlined text-primary text-xl">phone_iphone</span>
+                  <span>{BUSINESS.phoneDisplay}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="pt-8 border-t border-slate-200 text-center text-xs text-slate-400">
+            <p>© {new Date().getFullYear()} Sofa Cleaning Dublin. Professional Local Upholstery Care. All Rights Reserved.</p>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }

@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { Header, Footer } from "@/components";
 import { BUSINESS } from "@/lib/constants";
 
 const inter = Inter({
@@ -38,35 +37,10 @@ export const metadata: Metadata = {
     title: "Sofa Cleaning Dublin | Professional Upholstery Cleaning",
     description:
       "Dublin's trusted professional sofa and upholstery cleaning service. Same-day service, eco-friendly products, fully insured.",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Sofa Cleaning Dublin",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Sofa Cleaning Dublin | Professional Upholstery Cleaning",
-    description:
-      "Dublin's trusted professional sofa and upholstery cleaning service. Same-day service, eco-friendly products, fully insured.",
-    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  alternates: {
-    canonical: "https://sofacleaningdublin.ie",
   },
 };
 
@@ -76,8 +50,7 @@ const jsonLd = {
   "@type": "LocalBusiness",
   "@id": "https://sofacleaningdublin.ie/#business",
   name: BUSINESS.name,
-  description:
-    "Professional sofa and upholstery cleaning service in Dublin. Same-day service, eco-friendly products, fully insured.",
+  description: "Professional sofa and upholstery cleaning service in Dublin.",
   url: "https://sofacleaningdublin.ie",
   telephone: BUSINESS.phone,
   email: BUSINESS.email,
@@ -87,11 +60,6 @@ const jsonLd = {
     addressLocality: BUSINESS.address.city,
     postalCode: BUSINESS.address.postcode,
     addressCountry: "IE",
-  },
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: 53.3448,
-    longitude: -6.2388,
   },
   openingHoursSpecification: [
     {
@@ -108,20 +76,10 @@ const jsonLd = {
     },
   ],
   priceRange: "€€",
-  image: "https://sofacleaningdublin.ie/og-image.jpg",
-  sameAs: [BUSINESS.social.facebook, BUSINESS.social.instagram, BUSINESS.social.google],
   areaServed: {
     "@type": "City",
     name: "Dublin",
-    "@id": "https://www.wikidata.org/wiki/Q1761",
   },
-  serviceType: [
-    "Sofa Cleaning",
-    "Upholstery Cleaning",
-    "Couch Cleaning",
-    "Mattress Cleaning",
-    "Leather Cleaning",
-  ],
 };
 
 export default function RootLayout({
@@ -130,17 +88,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable}>
+    <html lang="en" className={`scroll-smooth ${inter.variable}`}>
       <head>
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-      <body>
-        <Header />
-        <main>{children}</main>
-        <Footer />
+      <body className="bg-white text-slate-800">
+        {children}
       </body>
     </html>
   );
